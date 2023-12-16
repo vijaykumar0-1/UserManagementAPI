@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 public class UserRepository {
     public final MongoTemplate mongoTemplate;
 
-    public void createUser(User user) {
-        mongoTemplate.save(user);
+    public User createUser(User user) {
+        mongoTemplate.save(user,"User");
+        User response = mongoTemplate.save(user);
+        return user;
     }
 }

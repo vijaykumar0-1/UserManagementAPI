@@ -13,12 +13,13 @@ public class UserController {
     @Autowired
     private UserService userService;
     @PostMapping(path = "user/register")
-    public ResponseEntity<?> userRegistration(@RequestParam String firstName,
+    public ResponseEntity<?> userRegistration(@RequestParam  String firstName,
                                               @RequestParam String lastName,
                                               @RequestParam String email,
-                                              @RequestParam String age)
+                                              @RequestParam (required = false) String age,
+                                              @RequestParam String password)
     {
-        String response =  userService.createUser(firstName,lastName,email,age);
+        String response =  userService.createUser(firstName,lastName,email,age,password);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
