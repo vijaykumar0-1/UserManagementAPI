@@ -34,10 +34,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public String userLogin(UserDto user) {
         User returnedUser = userRepositoryInterface.findByEmail(user.getEmail());
-        if(returnedUser != null)
+        if(returnedUser != null && passwordEncoder.matches(user.getPassword(), returnedUser.getPassword()))
         {
-            if (passwordEncoder.matches(user.getPassword(), returnedUser.getPassword()))
-                return "Login successful !";
+            return "Login successful !";
         }
         return "Invalid email or password";
     }
