@@ -1,4 +1,4 @@
-package com.UserManagementAPI.UserManagementAPI.controller;
+package com.UserManagementAPI.UserManagementAPI.controllers;
 
 import com.UserManagementAPI.UserManagementAPI.model.User;
 import com.UserManagementAPI.UserManagementAPI.service.UserService;

@@ -35,6 +35,11 @@ dependencies {
 	implementation 'org.glassfish:javax.el:3.0.0' // Required for Hibernate Validator
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Spring Boot validation starter
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-config'
+
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
 

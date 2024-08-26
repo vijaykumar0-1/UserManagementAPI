@@ -1,4 +1,4 @@
-package com.UserManagementAPI.UserManagementAPI.controller;
+package com.UserManagementAPI.UserManagementAPI.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
