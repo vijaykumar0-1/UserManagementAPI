@@ -50,7 +50,13 @@ public class SecurityConfig {
         );
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/user/register").permitAll()
+                .requestMatchers(
+                        "/auth/login",
+                        "/user/register",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/api-docs/**").permitAll()
                 .anyRequest().authenticated()
         );
 
