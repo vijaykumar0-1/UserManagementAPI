@@ -1,43 +1,47 @@
 package com.usermanagementapi.service.impl;
 
 import com.usermanagementapi.dto.UserDto;
-import com.usermanagementapi.model.User;
+import com.usermanagementapi.entity.User;
 import com.usermanagementapi.repository.UserRepository;
-import com.usermanagementapi.repository.UserRepositoryInterface;
 import com.usermanagementapi.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserRepositoryInterface userRepositoryInterface;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Override
-    public String createUser(User user) {
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
-        if (userRepositoryInterface.findByEmail(user.getEmail()) == null &&
-                userRepositoryInterface.findByUsername(user.getUsername()) == null) {
-            user.setPassword(hashedPassword);
-            userRepository.createUser(user);
-            return "user Created";
-        }
-        return "user already exists !";
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public String userLogin(UserDto user) {
-        User returnedUser = userRepositoryInterface.findByEmail(user.getEmail());
-        if(returnedUser != null && passwordEncoder.matches(user.getPassword(), returnedUser.getPassword()))
-        {
-            return "Login successful !";
+    public String registerUser(UserDto userDto) {
+
+        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+            return "User with this email already exists!";
         }
-        return "Invalid email or password";
+
+        if (userRepository.findByUsername(userDto.getUsername()) != null) {
+            return "Username already taken!";
+        }
+
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setAge(userDto.getAge());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setRole("ROLE_USER");
+
+        userRepository.save(user);
+
+        return "User created successfully!";
     }
+
 }

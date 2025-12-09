@@ -1,19 +1,11 @@
 package com.usermanagementapi.repository;
 
-import com.usermanagementapi.model.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import com.usermanagementapi.entity.User;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-@Repository
-@Component
-@RequiredArgsConstructor
-public class UserRepository {
-    public final MongoTemplate mongoTemplate;
+public interface UserRepository extends MongoRepository<User, String> {
 
-    public void createUser(User user) {
-        mongoTemplate.save(user,"User");
-        mongoTemplate.save(user);
-    }
+    User findByEmail(String email);
+
+    User findByUsername(String username);
 }

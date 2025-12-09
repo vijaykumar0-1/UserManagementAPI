@@ -1,46 +1,53 @@
 package com.usermanagementapi.controllers;
 
-import com.usermanagementapi.dto.UserDto;
-import com.usermanagementapi.service.UserService;
-import com.usermanagementapi.utils.JwtTokenUtil;
+import com.usermanagementapi.dto.LoginRequest;
+import com.usermanagementapi.security.JwtTokenProvider;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping(value = "v1/userLogin")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody UserDto user) {
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-        String response = userService.userLogin(user);
+    AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider){
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
-        Map<String, String> responseBody = new HashMap<>();
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
 
-        if (response.equals("Login successful !")) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
 
-            String token = jwtTokenUtil.generateToken(user.getEmail());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String token = jwtTokenProvider.generateToken(userDetails);
 
-            responseBody.put("message", response);
-            responseBody.put("token", token);
-            return new ResponseEntity<>(responseBody, HttpStatus.OK);
-        } else {
-            responseBody.put("message", response);
-            return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);
-        }
-
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Login successful",
+                        "token", token
+                )
+        );
 }
 
     @GetMapping("/protected")

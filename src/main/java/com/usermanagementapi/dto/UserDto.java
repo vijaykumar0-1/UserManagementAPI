@@ -1,18 +1,13 @@
 package com.usermanagementapi.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
 public class UserDto {
-    @Email
-    @NotBlank
+    private String firstName;
+    private String lastName;
     private String email;
-    @NotBlank
-    @Size(min = 8)
+    private int age;
     private String password;
+    private String username;
 }
