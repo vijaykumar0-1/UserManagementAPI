@@ -12,7 +12,7 @@ COPY src /app/src/
 RUN gradle build
 
 # Create a new image with the JAR file
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jre
 
 # Set the working directory in the container
 WORKDIR /app
